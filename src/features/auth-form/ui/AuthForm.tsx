@@ -1,10 +1,32 @@
 'use client';
 
 import { Button } from '@/shared/ui/button';
+import { useAuthStore } from '@/entities/auth/model/store';
+import { useRouter } from 'next/navigation';
+import { useNotificationsStore } from '@/entities/notifications/model/store';
 
 export const AuthForm = ({ type }: { type: 'login' | 'register' }) => {
+  const login = useAuthStore((s) => s.login);
+  const push = useNotificationsStore((s) => s.push);
+  const router = useRouter();
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const form = new FormData(e.currentTarget);
+    const email = form.get('email') as string;
+    const password = form.get('password') as string;
+
+    try {
+      await login(email, password);
+      router.push('/dashboard');
+    } catch (e: any) {
+      push('error', e.message || 'Ошибка авторизации');
+    }
+  }
+
   return (
-    <form className="
+    <form onSubmit={onSubmit} className="
       flex flex-col gap-6 w-[380px] p-8 
       bg-white dark:bg-[#1A1A1B] 
       rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none
@@ -14,9 +36,6 @@ export const AuthForm = ({ type }: { type: 'login' | 'register' }) => {
         <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase italic tracking-tighter">
           Какая-та<span className="text-brand">.</span>Система
         </h2>
-        <p className="text-slate-500 dark:text-zinc-400 text-sm">
-          {type === 'login' ? 'Добро пожаловать' : 'Регистрация нового сотрудника'}
-        </p>
       </div>
 
       <div className="space-y-4">
@@ -33,7 +52,7 @@ export const AuthForm = ({ type }: { type: 'login' | 'register' }) => {
             className="
               w-full p-2.5 rounded-lg border text-sm transition-all outline-none
               bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400
-              focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand
+              focus:bg-white dark:focus:bg-zinc-900 focus:border-brand focus:ring-1 focus:ring-brand
               dark:bg-zinc-800 dark:border-zinc-700 dark:text-white
             "
             placeholder="arman@example.com"
@@ -53,7 +72,7 @@ export const AuthForm = ({ type }: { type: 'login' | 'register' }) => {
             className="
               w-full p-2.5 rounded-lg border text-sm transition-all outline-none
               bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400
-              focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand
+              focus:bg-white dark:focus:bg-zinc-900 focus:border-brand focus:ring-1 focus:ring-brand
               dark:bg-zinc-800 dark:border-zinc-700 dark:text-white
             "
             placeholder="••••••••"

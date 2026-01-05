@@ -9,7 +9,7 @@ export const ThemeToggle = () => {
   return (
     <Button 
       onClick={toggleTheme} 
-      className="fixed top-4 right-4 !w-auto py-2 px-3 text-xs z-50"
+      className="top-4 right-4 !w-auto py-2 px-3 text-xs z-50"
     >
       {isDark ? 'Перейти на светлую' : 'Перейти на темную'}
     </Button>

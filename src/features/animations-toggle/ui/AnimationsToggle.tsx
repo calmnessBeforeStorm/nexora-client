@@ -9,7 +9,7 @@ export const AnimationsToggle = () => {
   return (
     <Button 
       onClick={toggleAnimations} 
-      className="fixed top-4 right-16 !w-auto py-2 px-3 text-xs z-50"
+      className="top-4 right-16 !w-auto py-2 px-3 text-xs z-50"
       variant="secondary"
     >
       {animationsEnabled ? 'Анимации вкл' : '⏸ Анимации выкл'}
