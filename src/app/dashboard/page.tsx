@@ -8,12 +8,10 @@ import { useRouter } from 'next/navigation';
 import { useNotificationsStore } from '@/entities/notifications/model/store';
 
 export default function DashboardPage() {
-  const { user, logout, hydrate } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   const router = useRouter();
   const push = useNotificationsStore((s) => s.push);
-
-  useEffect(() => { hydrate(); }, []);
 
   return (
     <AuthGuard>

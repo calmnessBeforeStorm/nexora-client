@@ -10,7 +10,7 @@ import { rolesApi } from '@/shared/api/roles.api';
 interface AuthState {
   user: User | null;
   token: string | null;
-  isLoading: boolean;
+  isHydrated: boolean;
 
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -23,7 +23,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   token: null,
-  isLoading: true,
+  isHydrated: false,
 
   async login(email, password) {
     const session = await authApi.login(email, password);
@@ -47,7 +47,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({
       user: session?.user ?? null,
       token: session?.token ?? null,
-      isLoading: false,
+      isHydrated: true,
     });
   },
 

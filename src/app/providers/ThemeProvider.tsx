@@ -1,17 +1,14 @@
 'use client';
 
 import { useThemeStore } from '@/entities/theme/model/store';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const isDark = useThemeStore((state) => state.isDark);
 
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle('dark', isDark);
   }, [isDark]);
 
   return <>{children}</>;

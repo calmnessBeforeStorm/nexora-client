@@ -7,28 +7,21 @@ import { AnimatedBackground } from '@/shared/ui/animated-background';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/entities/auth/model/store';
-import { trackLoginRedirect } from '@/shared/lib/login-redirect-tracker';
-import { useNotificationsStore } from '@/entities/notifications/model/store';
 
 export default function Home() {
-
-  const { user, hydrate } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
+  const isHydrated = useAuthStore((s) => s.isHydrated);
   const router = useRouter();
 
-  const push = useNotificationsStore((s) => s.push);
+  // Пока не гидратирован — не показываем ничего (убирает микрофликер)
+  if (!isHydrated) return null;
 
-  useEffect(() => {
-    hydrate();
-  }, []);
-
+  // Редирект в useEffect, когда пользователь авторизован
   useEffect(() => {
     if (user) {
-      const count = trackLoginRedirect();
-      if (count >= 3) push('warning', 'Похоже, вы зациклились при попытке войти в систему. Проверьте URL-адрес на наличие ошибок.');
       router.replace('/dashboard');
     }
-
-  }, [user]);
+  }, [user, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-[#09090b] transition-colors duration-300 font-sans relative overflow-hidden">
